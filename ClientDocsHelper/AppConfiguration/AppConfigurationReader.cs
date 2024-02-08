@@ -11,7 +11,7 @@ namespace ClientDocsHelper.AppConfiguration
             this.filePath = filePath ?? throw new ArgumentException("File path not provided");
         }
 
-        public async Task<AppConfiguration?> ReadConfiguration()
+        public async Task<AppConfigurationModel?> ReadConfiguration()
         {
             var configJson = await GerConfigJsonFromFile();
             return string.IsNullOrWhiteSpace(configJson) ? null : GetAppConfigurationFromJson(configJson);
@@ -36,12 +36,12 @@ namespace ClientDocsHelper.AppConfiguration
             return configJson;
         }
 
-        private AppConfiguration? GetAppConfigurationFromJson(string json)
+        private AppConfigurationModel? GetAppConfigurationFromJson(string json)
         {
-            AppConfiguration? appConfiguration = null;
+            AppConfigurationModel? appConfiguration = null;
             try
             {
-                appConfiguration = JsonSerializer.Deserialize<AppConfiguration>(json);
+                appConfiguration = JsonSerializer.Deserialize<AppConfigurationModel>(json);
             } catch (JsonException)
             {
                 Console.WriteLine($"Stala se chyba při čtení konfiguračního souboru. Obsah konfigurační soubor má špatný formát, musí být validní JSON.");

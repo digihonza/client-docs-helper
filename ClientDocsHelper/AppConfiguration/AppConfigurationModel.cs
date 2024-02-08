@@ -1,6 +1,6 @@
 ﻿namespace ClientDocsHelper.AppConfiguration
 {
-    internal class AppConfiguration
+    internal class AppConfigurationModel
     {
         public string? TemplateFolderPath { get; set; }
         public string? ClientsRootPath { get; set; }

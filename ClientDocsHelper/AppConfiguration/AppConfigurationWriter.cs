@@ -11,7 +11,7 @@ namespace ClientDocsHelper.AppConfiguration
             this.filePath = filePath ?? throw new ArgumentException("File path not provided");
         }
 
-        public async Task SaveAppConfiguration(AppConfiguration appConfiguration)
+        public async Task SaveAppConfiguration(AppConfigurationModel appConfiguration)
         {
             var configJson = JsonSerializer.Serialize(appConfiguration, new JsonSerializerOptions { WriteIndented = true });
             try
