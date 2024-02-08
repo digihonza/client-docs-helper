@@ -53,10 +53,10 @@ namespace ClientDocsHelper
             string? selection;
             do
             {
-                Console.WriteLine("Vyberte možnost.");
-                Console.WriteLine("1) Vytvořit složky pro nového klienta.");
-                Console.WriteLine("2) Upravit nastavení.");
-                Console.WriteLine("3) Ukončit.");
+                Console.WriteLine("Vyberte možnost:");
+                Console.WriteLine("1) Vytvořit složky pro nového klienta");
+                Console.WriteLine("2) Upravit nastavení");
+                Console.WriteLine("3) Ukončit");
                 selection = Console.ReadLine();
             } while (!validSelections.Contains(selection));
             return selection!;

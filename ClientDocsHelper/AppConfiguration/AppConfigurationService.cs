@@ -1,9 +1,4 @@
 ﻿using ClientDocsHelper.ConsoleUtilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ClientDocsHelper.AppConfiguration
 {
@@ -60,13 +55,13 @@ namespace ClientDocsHelper.AppConfiguration
             string? templatePath;
             if (appConfig?.HasTemplateFolderPath ?? false)
             {
-                var prompt = $"Zadejte nové umístění vzorové struktury složek. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})";
+                var prompt = $"Zadejte nové umístění složky se vzorovou strukturou. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})";
                 templatePath = PathEntryHelpers.ReadValidPath(prompt, false);
                 templatePath = string.IsNullOrWhiteSpace(templatePath) ? appConfig.TemplateFolderPath : templatePath;
             }
             else
             {
-                var prompt = $"Zadejte umístění vzorové struktury složek.";
+                var prompt = $"Zadejte nové umístění složky se vzorovou strukturou.";
                 templatePath = PathEntryHelpers.ReadValidPath(prompt, true);
             }
 
