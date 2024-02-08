@@ -70,25 +70,30 @@ namespace ClientDocsHelper
 
         private void CreateClientFolderStructure()
         {
-            Console.WriteLine("Zadejte jméno klienta:");
-            var clientName = Console.ReadLine();
+            string? clientName;
+            do
+            {
+                Console.WriteLine("Zadejte jméno klienta:");
+                clientName = Console.ReadLine();
 
-            // TODO: validate name for invalid path characters
+            } while (string.IsNullOrWhiteSpace(clientName) || !ValidateFileNameCharacters(clientName));
 
-            // TODO: Exception handling
-            FileSystem.CopyDirectory(appConfig.TemplateFolderPath, Path.Combine(appConfig.ClientsRootPath, clientName));
-            Console.WriteLine("Složky vytvořeny.");
+            CopyClientFolders(appConfig.TemplateFolderPath, Path.Combine(appConfig.ClientsRootPath, clientName));
+            Console.WriteLine("Složky vytvořeny.\n");
         }
 
         private AppConfigurationModel GetAppConfigurationFromUser()
         {
             var updatedAppConfiguration = new AppConfigurationModel();
-            string? templatePath = null;
+            string? templatePath;
             if (appConfig?.HasTemplateFolderPath ?? false)
             {
-                Console.WriteLine($"Zadejte nové umístění vzorové struktury složek. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})");
-                // TODO: validate name for invalid path characters
-                templatePath = Console.ReadLine();
+                do
+                {
+                    Console.WriteLine($"Zadejte nové umístění vzorové struktury složek. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})");
+                    templatePath = Console.ReadLine();
+
+                } while (!string.IsNullOrEmpty(templatePath) && !ValidatePath(templatePath));
                 templatePath = string.IsNullOrWhiteSpace(templatePath) ? appConfig.TemplateFolderPath : templatePath;
             }
             else
@@ -97,18 +102,18 @@ namespace ClientDocsHelper
                 {
                     Console.WriteLine("Zadejte umístění vzorové struktury složek.");
                     templatePath = Console.ReadLine();
-                    // TODO: validate name for invalid path characters
-
-                } while (string.IsNullOrWhiteSpace(templatePath));
+                } while (string.IsNullOrWhiteSpace(templatePath) || !ValidatePath(templatePath));
 
             }
 
-            string? clientsRootPath = null;
+            string? clientsRootPath;
             if (appConfig?.HasClientsRootPath ?? false)
             {
-                Console.WriteLine($"Zadejte nové umístění kmenového adresáře pro klientské složky. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})");
-                // TODO: validate name for invalid path characters
-                clientsRootPath = Console.ReadLine();
+                do
+                {
+                    Console.WriteLine($"Zadejte nové umístění kmenového adresáře pro klientské složky. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})");
+                    clientsRootPath = Console.ReadLine();
+                } while (!string.IsNullOrEmpty(clientsRootPath) && !ValidatePath(clientsRootPath));
                 clientsRootPath = string.IsNullOrWhiteSpace(clientsRootPath) ? appConfig.ClientsRootPath : clientsRootPath;
             }
             else
@@ -117,9 +122,7 @@ namespace ClientDocsHelper
                 {
                     Console.WriteLine("Zadejte umístění kmenového adresáře pro klientské složky.");
                     clientsRootPath = Console.ReadLine();
-                    // TODO: validate name for invalid path characters
-
-                } while (string.IsNullOrWhiteSpace(clientsRootPath));
+                } while (string.IsNullOrWhiteSpace(clientsRootPath) || !ValidatePath(clientsRootPath));
 
             }
 
@@ -127,6 +130,51 @@ namespace ClientDocsHelper
             updatedAppConfiguration.ClientsRootPath = clientsRootPath;
 
             return updatedAppConfiguration;
+        }
+
+        private bool ValidatePath(string path) => ValidatePathCharacters(path) && ValidatePathExists(path);
+
+        private bool ValidatePathExists(string path)
+        {
+            if (!Path.Exists(path))
+            {
+                Console.WriteLine("Zadaná složka neexistuje");
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidatePathCharacters(string path)
+        {
+            var invalidCharIndex = path.IndexOfAny(Path.GetInvalidPathChars());
+            if (invalidCharIndex >= 0)
+            {
+                Console.WriteLine($"Následující znak není povolen: '{path[invalidCharIndex]}'");
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidateFileNameCharacters(string path)
+        {
+            var invalidCharIndex = path.IndexOfAny(Path.GetInvalidFileNameChars());
+            if (invalidCharIndex >= 0)
+            {
+                Console.WriteLine($"Následující znak není povolen: '{path[invalidCharIndex]}'");
+                return false;
+            }
+            return true;
+        }
+
+        private void CopyClientFolders(string templateFolderPath, string destinationFolderPath)
+        {
+            try
+            {
+                FileSystem.CopyDirectory(templateFolderPath, destinationFolderPath);
+            } catch (Exception ex)
+            {
+                Console.WriteLine($"Stala se chyba při kopírování složek. ({ex.Message})");
+            }
         }
     }
 }
