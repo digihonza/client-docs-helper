@@ -9,5 +9,11 @@
         public bool HasClientsRootPath => !string.IsNullOrWhiteSpace(ClientsRootPath);
 
         public bool IsValid => HasTemplateFolderPath && HasClientsRootPath;
+
+        public object GetStorageObject() => new
+        {
+            TemplateFolderPath,
+            ClientsRootPath
+        };
     }
 }

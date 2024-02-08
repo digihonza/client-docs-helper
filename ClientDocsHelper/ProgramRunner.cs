@@ -1,23 +1,22 @@
 ﻿using ClientDocsHelper.AppConfiguration;
-using Microsoft.VisualBasic.FileIO;
 
 namespace ClientDocsHelper
 {
     internal class ProgramRunner
     {
-        private readonly AppConfigurationReader appConfigurationReader;
-        private readonly AppConfigurationWriter appConfigurationWriter;
+        private readonly AppConfigurationService appConfigurationService;
+        private readonly ClientFolderCreationService clientFolderCreationService;
         private AppConfigurationModel? appConfig;
 
-        public ProgramRunner(AppConfigurationReader appConfigurationReader, AppConfigurationWriter appConfigurationWriter)
+        public ProgramRunner(AppConfigurationService appConfigurationService, ClientFolderCreationService clientFolderCreationService)
         {
-            this.appConfigurationReader = appConfigurationReader;
-            this.appConfigurationWriter = appConfigurationWriter;
+            this.appConfigurationService = appConfigurationService;
+            this.clientFolderCreationService = clientFolderCreationService;
         }
 
         public async Task Run()
         {
-            appConfig = await appConfigurationReader.ReadConfiguration();
+            appConfig = await appConfigurationService.GetAppConfiguration();
             if (appConfig == null || !appConfig.IsValid)
             {
                 await UpdateAndStoreAppConfiguration();
@@ -27,6 +26,7 @@ namespace ClientDocsHelper
             while (true)
             {
                 string selection = GetUserActionSelection();
+                // The selection could be converted into enum for better readability.
 
                 if (selection == "3")
                 {
@@ -64,117 +64,12 @@ namespace ClientDocsHelper
 
         private async Task UpdateAndStoreAppConfiguration()
         {
-            appConfig = GetAppConfigurationFromUser();
-            await appConfigurationWriter.SaveAppConfiguration(appConfig);
+            appConfig = await appConfigurationService.UpdateAppConfigurationFromUser();
         }
 
         private void CreateClientFolderStructure()
         {
-            string? clientName;
-            do
-            {
-                Console.WriteLine("Zadejte jméno klienta:");
-                clientName = Console.ReadLine();
-
-            } while (string.IsNullOrWhiteSpace(clientName) || !ValidateFileNameCharacters(clientName));
-
-            CopyClientFolders(appConfig.TemplateFolderPath, Path.Combine(appConfig.ClientsRootPath, clientName));
-            Console.WriteLine("Složky vytvořeny.\n");
-        }
-
-        private AppConfigurationModel GetAppConfigurationFromUser()
-        {
-            var updatedAppConfiguration = new AppConfigurationModel();
-            string? templatePath;
-            if (appConfig?.HasTemplateFolderPath ?? false)
-            {
-                do
-                {
-                    Console.WriteLine($"Zadejte nové umístění vzorové struktury složek. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})");
-                    templatePath = Console.ReadLine();
-
-                } while (!string.IsNullOrEmpty(templatePath) && !ValidatePath(templatePath));
-                templatePath = string.IsNullOrWhiteSpace(templatePath) ? appConfig.TemplateFolderPath : templatePath;
-            }
-            else
-            {
-                do
-                {
-                    Console.WriteLine("Zadejte umístění vzorové struktury složek.");
-                    templatePath = Console.ReadLine();
-                } while (string.IsNullOrWhiteSpace(templatePath) || !ValidatePath(templatePath));
-
-            }
-
-            string? clientsRootPath;
-            if (appConfig?.HasClientsRootPath ?? false)
-            {
-                do
-                {
-                    Console.WriteLine($"Zadejte nové umístění kmenového adresáře pro klientské složky. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})");
-                    clientsRootPath = Console.ReadLine();
-                } while (!string.IsNullOrEmpty(clientsRootPath) && !ValidatePath(clientsRootPath));
-                clientsRootPath = string.IsNullOrWhiteSpace(clientsRootPath) ? appConfig.ClientsRootPath : clientsRootPath;
-            }
-            else
-            {
-                do
-                {
-                    Console.WriteLine("Zadejte umístění kmenového adresáře pro klientské složky.");
-                    clientsRootPath = Console.ReadLine();
-                } while (string.IsNullOrWhiteSpace(clientsRootPath) || !ValidatePath(clientsRootPath));
-
-            }
-
-            updatedAppConfiguration.TemplateFolderPath = templatePath;
-            updatedAppConfiguration.ClientsRootPath = clientsRootPath;
-
-            return updatedAppConfiguration;
-        }
-
-        private bool ValidatePath(string path) => ValidatePathCharacters(path) && ValidatePathExists(path);
-
-        private bool ValidatePathExists(string path)
-        {
-            if (!Path.Exists(path))
-            {
-                Console.WriteLine("Zadaná složka neexistuje");
-                return false;
-            }
-            return true;
-        }
-
-        private bool ValidatePathCharacters(string path)
-        {
-            var invalidCharIndex = path.IndexOfAny(Path.GetInvalidPathChars());
-            if (invalidCharIndex >= 0)
-            {
-                Console.WriteLine($"Následující znak není povolen: '{path[invalidCharIndex]}'");
-                return false;
-            }
-            return true;
-        }
-
-        private bool ValidateFileNameCharacters(string path)
-        {
-            var invalidCharIndex = path.IndexOfAny(Path.GetInvalidFileNameChars());
-            if (invalidCharIndex >= 0)
-            {
-                Console.WriteLine($"Následující znak není povolen: '{path[invalidCharIndex]}'");
-                return false;
-            }
-            return true;
-        }
-
-        private void CopyClientFolders(string templateFolderPath, string destinationFolderPath)
-        {
-            try
-            {
-                FileSystem.CopyDirectory(templateFolderPath, destinationFolderPath);
-            } catch (Exception ex)
-            {
-                Console.WriteLine($"Stala se chyba při kopírování složek. ({ex.Message})");
-            }
+            clientFolderCreationService.CreateClientFolderStructure(appConfig.TemplateFolderPath, appConfig.ClientsRootPath);
         }
     }
 }
