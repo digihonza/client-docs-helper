@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34322.80
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientDocsHelper", "ClientDocsHelper\ClientDocsHelper.csproj", "{63C70EE8-2DA9-4B44-A405-7C12FD7908BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63C70EE8-2DA9-4B44-A405-7C12FD7908BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63C70EE8-2DA9-4B44-A405-7C12FD7908BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63C70EE8-2DA9-4B44-A405-7C12FD7908BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63C70EE8-2DA9-4B44-A405-7C12FD7908BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14D3E94D-C80E-4AE4-BFF1-7CC184A9C24F}
+	EndGlobalSection
+EndGlobal
