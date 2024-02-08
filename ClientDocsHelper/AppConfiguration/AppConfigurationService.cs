@@ -38,13 +38,13 @@ namespace ClientDocsHelper.AppConfiguration
             if (appConfig?.HasClientsRootPath ?? false)
             {
                 var prompt = $"Zadejte nové umístění kmenového adresáře pro klientské složky. Enterem ponecháte stávající ({appConfig.ClientsRootPath})";
-                clientsRootPath = PathEntryHelpers.ReadValidPath(prompt, false);
+                clientsRootPath = PathEntryHelpers.ReadValidPath(prompt, notNullOrEmpty: false);
                 clientsRootPath = string.IsNullOrWhiteSpace(clientsRootPath) ? appConfig.ClientsRootPath : clientsRootPath;
             }
             else
             {
                 var prompt = $"Zadejte umístění kmenového adresáře pro klientské složky.";
-                clientsRootPath = PathEntryHelpers.ReadValidPath(prompt, true);
+                clientsRootPath = PathEntryHelpers.ReadValidPath(prompt, notNullOrEmpty: true);
             }
 
             return clientsRootPath;
@@ -56,13 +56,13 @@ namespace ClientDocsHelper.AppConfiguration
             if (appConfig?.HasTemplateFolderPath ?? false)
             {
                 var prompt = $"Zadejte nové umístění složky se vzorovou strukturou. Enterem ponecháte stávající ({appConfig.TemplateFolderPath})";
-                templatePath = PathEntryHelpers.ReadValidPath(prompt, false);
+                templatePath = PathEntryHelpers.ReadValidPath(prompt, notNullOrEmpty: false);
                 templatePath = string.IsNullOrWhiteSpace(templatePath) ? appConfig.TemplateFolderPath : templatePath;
             }
             else
             {
                 var prompt = $"Zadejte nové umístění složky se vzorovou strukturou.";
-                templatePath = PathEntryHelpers.ReadValidPath(prompt, true);
+                templatePath = PathEntryHelpers.ReadValidPath(prompt, notNullOrEmpty: true);
             }
 
             return templatePath;

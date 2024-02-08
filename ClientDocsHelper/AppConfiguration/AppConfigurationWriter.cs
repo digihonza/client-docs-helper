@@ -13,7 +13,7 @@ namespace ClientDocsHelper.AppConfiguration
 
         public async Task SaveAppConfiguration(AppConfigurationModel appConfiguration)
         {
-            var configJson = JsonSerializer.Serialize(appConfiguration.GetStorageObject(), new JsonSerializerOptions { WriteIndented = true });
+            var configJson = JsonSerializer.Serialize(appConfiguration, new JsonSerializerOptions { WriteIndented = true });
             try
             {
                 await File.WriteAllTextAsync(filePath, configJson);

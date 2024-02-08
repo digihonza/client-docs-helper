@@ -5,13 +5,13 @@ namespace ClientDocsHelper
     internal class ProgramRunner
     {
         private readonly AppConfigurationService appConfigurationService;
-        private readonly ClientFolderCreationService clientFolderCreationService;
+        private readonly ProjectFolderCreationService projectFolderCreationService;
         private AppConfigurationModel? appConfig;
 
-        public ProgramRunner(AppConfigurationService appConfigurationService, ClientFolderCreationService clientFolderCreationService)
+        public ProgramRunner(AppConfigurationService appConfigurationService, ProjectFolderCreationService projectFolderCreationService)
         {
             this.appConfigurationService = appConfigurationService;
-            this.clientFolderCreationService = clientFolderCreationService;
+            this.projectFolderCreationService = projectFolderCreationService;
         }
 
         public async Task Run()
@@ -25,10 +25,10 @@ namespace ClientDocsHelper
 
             while (true)
             {
-                string selection = GetUserActionSelection();
-                // The selection could be converted into enum for better readability.
+                var selection = GetUserActionSelection();
+                // The selection could be converted into enum for better readability or at least replaced with constants to eliminate magic strings.
 
-                if (selection == "3")
+                if (selection == "3")   // Exit
                 {
                     break;
                 }
@@ -54,7 +54,7 @@ namespace ClientDocsHelper
             do
             {
                 Console.WriteLine("Vyberte možnost:");
-                Console.WriteLine("1) Vytvořit složky pro nového klienta");
+                Console.WriteLine("1) Vytvořit složky pro nový projekt");
                 Console.WriteLine("2) Upravit nastavení");
                 Console.WriteLine("3) Ukončit");
                 selection = Console.ReadLine();
@@ -69,7 +69,7 @@ namespace ClientDocsHelper
 
         private void CreateClientFolderStructure()
         {
-            clientFolderCreationService.CreateClientFolderStructure(appConfig.TemplateFolderPath, appConfig.ClientsRootPath);
+            projectFolderCreationService.CreateProjectFolderStructure(appConfig.TemplateFolderPath, appConfig.ClientsRootPath);
         }
     }
 }

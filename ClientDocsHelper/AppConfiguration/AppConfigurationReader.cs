@@ -44,7 +44,7 @@ namespace ClientDocsHelper.AppConfiguration
                 appConfiguration = JsonSerializer.Deserialize<AppConfigurationModel>(json);
             } catch (JsonException)
             {
-                Console.WriteLine($"Stala se chyba při čtení konfiguračního souboru. Obsah konfigurační soubor má špatný formát, musí být validní JSON.");
+                Console.WriteLine($"Stala se chyba při čtení konfiguračního souboru. Obsah konfiguračního souboru má špatný formát, musí být validní JSON.");
             }
             catch (Exception ex)
             {
